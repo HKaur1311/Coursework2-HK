@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>After School Club</title>
+    
+  <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+  <script> src='lessons.js' </script>  
+</head>
+
+<div id="app">
+    <header>
+      <div class="navbar navbar-default">
+        <div class="navbar-header">
+          <h1>{{ sitename }}</h1>
+        </div>
+    </header>
+<body>
+    <div v-if ="showProduct"> 
+        <div v-for="  product in products"> 
+        <div class="col-md-6 col-md-offset-2 description">
+            <p> Topic : {{product.topic}}</p>
+          
+            <p> Location: {{product.location}}</p>
+          <p> 
+            Price : {{product.price}}
+          </p>
+           
+        </div>
+      </div>
+    </div>
+    
+</body>
+<script >
+     
+var webstore = new Vue({
+      el: '#app',
+      data: {
+        showProduct: true,
+        sitename: "After School Club",
+         
+        products: [],
+    },
+    created: function() {
+      fetch("http://localhost:3000/lessons").then(
+        function(response) {
+          response.json().then(
+            function(json){
+               
+               console.log(json);
+               webstore.products = json;
+            }
+          )
+        }
+      )
+    }
+     
+});
+
+</script>
+ 
+
+
+
+</html>
