@@ -1,27 +1,16 @@
-var express = require("express"); // Requires the Express module
-const app = express();
-app.set('json spaces', 3);
+const express = require('express');
+const path = require('path');
 const cors = require('cors');
+const MongoClient = require('mongodb').MongoClient;
+const app = express();
 
-const  products = require('./routes/lessons');
-const users = require('./routes/user');
-const homepage = require('./routes/home');
- 
-app.use((req,res,next) => {
-    console.log('logging the request');
-    next();
-
-});
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(products);
- 
-app.use(users);
-app.use(homepage);
-app.get('/lessons.js', (req,res)=>{
-    res.sendFile(path.join(__dirname, '../','public', 'lessons.js'));
-})
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
 
-app.listen(3000,()=> {
-    console.log('Server created at port 3000');
-});
+  app.listen(3000, () => {
+    console.log("Server started on http://localhost:3000");
+  });
