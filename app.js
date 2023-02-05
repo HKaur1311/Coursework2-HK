@@ -64,6 +64,33 @@ app.get("/:collectionName", function (req, res, next) {
     });
 });
 
+// add new order
+
+app.post("/orders", (req, res) => {
+  MongoClient.connect(uri, (err, client) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send({ message: "Error connecting to database" });
+    } else {
+      const order = {
+        name: req.body.name,
+        phoneNumber: req.body.phoneNumber,
+        lessonId: req.body.lessonId,
+        numberOfSpaces: req.body.numberOfSpaces,
+      };
+      db.collection("orders").insertOne(order, (error) => {
+        if (error) {
+          console.log(error);
+          res.status(500).send({ message: "Error saving order" });
+        } else {
+          res.status(201).send({ message: "Order saved successfully" });
+        }
+        client.close();
+      });
+    }
+  });
+});
+
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
