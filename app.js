@@ -5,17 +5,19 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const ObjectID = require("mongodb").ObjectID;
 const app = express();
+// fecthcing database properties 
 let propertiesReader = require("properties-reader");
 let propertiesPath = path.resolve(__dirname, "conf/db.properties");
 let properties = propertiesReader(propertiesPath);
 let dbPprefix = properties.get("db.prefix");
-//encdoing URI
+//encdoing URI for creating DataBase URI
 let dbUsername = encodeURIComponent(properties.get("db.user"));
 let dbPwd = encodeURIComponent(properties.get("db.pwd"));
 let dbName = properties.get("db.dbName");
 let dbUrl = properties.get("db.dbUrl");
 let dbParams = properties.get("db.params");
 const uri = dbPprefix + dbUsername + ":" + dbPwd + dbUrl + dbParams;
+// adding app use functions
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
@@ -36,7 +38,6 @@ app.use(logger);
 app.use(morgan("short"));
 // Image middleware
 const imageMiddleware = express.static("public/images");
-
 app.use("/images", (req, res, next) => {
   imageMiddleware(req, res, (err) => {
     if (err) {
