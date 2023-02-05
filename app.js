@@ -90,7 +90,31 @@ app.post("/orders", (req, res) => {
     }
   });
 });
-
+// update lesson space
+app.put("/lessons/:id", (req, res) => {
+  MongoClient.connect(uri, (err, client) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send({ message: "Error connecting to database" });
+    } else {
+      const lessonId = req.params.id;
+      const orderSpaces = req.body.numberOfSpaces;
+      db.collection("lessons").updateOne(
+        { _id: ObjectID(lessonId) },
+        { $inc: { Space: -orderSpaces } },
+        (error) => {
+          if (error) {
+            console.log(error);
+            res.status(500).send({ message: "Error updating lesson" });
+          } else {
+            res.status(200).send({ message: "Lesson updated successfully" });
+          }
+          client.close();
+        }
+      );
+    }
+  });
+});
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
